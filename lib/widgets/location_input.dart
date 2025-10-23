@@ -50,9 +50,9 @@ class _LocationInputState extends State<LocationInput> {
       }
     }
 
-    setState(() {
-      isGettingLocation = true;
-    });
+    // setState(() {
+    //   isGettingLocation = true;
+    // });
 
     locationData = await location.getLocation();
     final lat = locationData.latitude;
