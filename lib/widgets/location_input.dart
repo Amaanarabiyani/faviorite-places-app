@@ -7,7 +7,8 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({super.key, required this.onSelectLocation});
+  final void Function(PlaceLocation location) onSelectLocation;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -50,9 +51,9 @@ class _LocationInputState extends State<LocationInput> {
       }
     }
 
-    // setState(() {
-    //   isGettingLocation = true;
-    // });
+    setState(() {
+      isGettingLocation = true;
+    });
 
     locationData = await location.getLocation();
     final lat = locationData.latitude;
@@ -76,6 +77,8 @@ class _LocationInputState extends State<LocationInput> {
     });
     log(locationData.longitude.toString());
     log(locationData.latitude.toString());
+
+    widget.onSelectLocation(_pickLocation!);
   }
 
   @override
@@ -84,6 +87,8 @@ class _LocationInputState extends State<LocationInput> {
       children: [
         _pickLocation != null
             ? Image.network(locationImage, fit: BoxFit.cover, width: double.infinity)
+            : isGettingLocation
+            ? CircularProgressIndicator()
             : Container(
                 alignment: Alignment.center,
                 width: double.infinity,
@@ -94,14 +99,12 @@ class _LocationInputState extends State<LocationInput> {
                     color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                   ),
                 ),
-                child: isGettingLocation
-                    ? CircularProgressIndicator()
-                    : Text(
-                        "No Location Chosen",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      ),
+                child: Text(
+                  "No Location Chosen",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                ),
               ),
 
         Row(

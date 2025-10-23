@@ -24,6 +24,7 @@ class PlaceList extends StatelessWidget {
         final yourPlace = places[index];
 
         return ListTile(
+          subtitle: Text(yourPlace.location.address),
           leading: CircleAvatar(radius: 26, backgroundImage: FileImage(yourPlace.image)),
           onTap: () {
             Navigator.of(

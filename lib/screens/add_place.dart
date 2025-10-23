@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:faiorites_places/models/place.dart';
 import 'package:faiorites_places/providers/user_places.dart';
 import 'package:faiorites_places/widgets/image_input.dart';
 import 'package:faiorites_places/widgets/location_input.dart';
@@ -18,15 +19,18 @@ class _AddPlaceState extends ConsumerState<AddPlace> {
   TextEditingController titleController = TextEditingController();
 
   File? _selectedImage;
+  PlaceLocation? _selectedPlaceLocation;
 
   void savePlace() {
     final enteredText = titleController.text;
 
-    if (enteredText.isEmpty || _selectedImage == null) {
+    if (enteredText.isEmpty || _selectedImage == null || _selectedPlaceLocation == null) {
       return;
     }
 
-    ref.read(userPlacesProvider.notifier).addPlace(enteredText, _selectedImage!);
+    ref
+        .read(userPlacesProvider.notifier)
+        .addPlace(enteredText, _selectedImage!, _selectedPlaceLocation!);
 
     Fluttertoast.showToast(msg: "Item Entered Sucessfully");
 
@@ -63,7 +67,11 @@ class _AddPlaceState extends ConsumerState<AddPlace> {
             ),
             SizedBox(height: 10),
 
-            LocationInput(),
+            LocationInput(
+              onSelectLocation: (location) {
+                _selectedPlaceLocation = location;
+              },
+            ),
 
             SizedBox(height: 10),
 
